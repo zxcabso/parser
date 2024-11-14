@@ -1,0 +1,29 @@
+<library>
+    <book id="1">
+        <title>Effective C++</title>
+        <author>Scott Meyers</author>
+        <year>2005</year>
+        <genre>Programming</genre>
+        <price currency="USD">39.99</price>
+    </book>
+    <book id="2">
+        <title>Clean Code</title>
+        <author>Robert C. Martin</author>
+        <year>2008</year>
+        <genre>Programming</genre>
+        <price currency="USD">42.99</price>
+    </book>
+    <book id="3">
+        <title>The Pragmatic Programmer</title>
+        <author>Andrew Hunt, David Thomas</author>
+        <year>1999</year>
+        <genre>Programming</genre>
+        <price currency="USD">49.99</price>
+    </book>
+    <magazine id="4">
+        <title>Tech Monthly</title>
+        <issue>42</issue>
+        <year>2023</year>
+        <price currency="USD">5.99</price>
+    </magazine>
+</library>
