@@ -1,5 +1,5 @@
-simple csv parser in c++
+csv - ✅ !
+xml - ✅❌ ( test ) !
+txt - ✅ !
 
-todo.list->addTask(
-  "parse txt","parse xml","parse json";
-);
+json - ❌
