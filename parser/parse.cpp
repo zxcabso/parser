@@ -31,9 +31,9 @@ namespace parse
 						std::cout << ", ";
 					}
 				}
-				std::cout << std::endl; 
+				std::cout << std::endl;
 			}
-		}		
+		}
 		void searchCSV(const std::vector<Row>& rows, const std::string& search) {
 			bool found = false;
 
@@ -106,12 +106,12 @@ namespace parse
 				size_t start = line.rfind(' ', pos) + 1;
 				std::string name = line.substr(start, pos - start);
 
-				pos += 2; 
+				pos += 2;
 				size_t end = line.find('"', pos);
 				std::string value = line.substr(pos, end - pos);
 				attributes[name] = value;
 
-				pos = end + 1; 
+				pos = end + 1;
 			}
 			return attributes;
 		}
@@ -185,4 +185,81 @@ namespace parse
 			std::cout << std::endl;
 		}
 	}
-}
+		namespace html
+		{
+			std::unordered_map<std::string, std::string> parseAttributes(const std::string& line)
+			{
+				std::unordered_map<std::string, std::string> attributes;
+				size_t pos = 0;
+
+				while ((pos = line.find("=", pos)) != std::string::npos) {
+					size_t start = line.rfind(' ', pos) + 1;
+					std::string name = line.substr(start, pos - start);
+
+					pos += 2;
+					size_t end = line.find('"', pos);
+					std::string value = line.substr(pos, end - pos);
+					attributes[name] = value;
+
+					pos = end + 1;
+				}
+
+				return attributes;
+			}
+			parse::html::htmlNode parseHTML(std::ifstream& file)
+			{
+				parse::html::htmlNode node;
+				std::string line;
+
+				while (std::getline(file, line)) {
+					line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+
+					if (line.find('<') != std::string::npos && line.find("</") == std::string::npos) {
+						size_t start = line.find('<') + 1;
+						size_t end = line.find(' ', start);
+						if (end == std::string::npos) end = line.find('>');
+
+						node.name = line.substr(start, end - start);
+						node.attributes = parseAttributes(line);
+
+						size_t textStart = line.find('>') + 1;
+						size_t textEnd = line.find("</", textStart);
+						if (textEnd != std::string::npos) {
+							node.text = line.substr(textStart, textEnd - textStart);
+						}
+						else {
+							while (true) {
+								parse::html::htmlNode childNode = parseHTML(file);
+								if (childNode.name.empty()) break;
+								node.addChild(childNode);
+							}
+						}
+					}
+					else if (line.find("</") != std::string::npos) {
+						break;
+					}
+				}
+
+				return node;
+			}
+			void html::printHTML(const parse::html::htmlNode& node, int depth) {
+				std::string indent(depth * 2, ' ');
+				std::cout << indent << "<" << node.name;
+
+				for (const auto& [key, value] : node.attributes) {
+					std::cout << " " << key << "=\"" << value << "\"";
+				}
+
+				if (node.children.empty() && node.text.empty()) {
+					std::cout << " />\n";
+				}
+				else {
+					std::cout << ">" << node.text << "\n";
+					for (const auto& child : node.children) {
+						html::printHTML(child, depth + 1);
+					}
+					std::cout << indent << "</" << node.name << ">\n";
+				}
+			}
+		}
+	}

@@ -36,5 +36,17 @@ int main()
     parse::xml::printXML(root,0);
 
     file.close();
+
+    // html
+
+    std::ifstream hfile("a.html");
+    if (!hfile.is_open()) {
+        std::cerr << "Failed to open file!" << std::endl;
+        return 1;
+    }
+
+    parse::html::htmlNode hroot = parse::html::parseHTML(hfile);
+    parse::html::printHTML(hroot);
+
     return 0;
 }

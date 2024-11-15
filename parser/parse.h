@@ -38,5 +38,22 @@ namespace parse
 		xml parseXML(std::ifstream& file);
 		void printXML(const xml& node, int depth);
 	}
+	namespace html
+	{
+		struct htmlNode {
+			std::string name;
+			std::unordered_map<std::string, std::string> attributes; 
+			std::string text;
+			std::vector < htmlNode > children;
+
+			void addChild(const htmlNode & child) {
+				children.push_back(child);
+			}
+		};
+
+		std::unordered_map<std::string, std::string> parseAttributes(const std::string& line);
+		htmlNode parseHTML(std::ifstream& file);
+		void printHTML(const htmlNode& node, int depth = 0);
+	}
 
 }
